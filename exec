@@ -1,0 +1,7 @@
+#!/bin/bash
+
+link='https://www.google.com/search?channel=fs&client=ubuntu&q=tic+tac+toe'
+largura=$((1024))
+altura=$((768-29))
+
+firefox --private-window $link
