@@ -34,7 +34,7 @@ def compare_images(image0, image1):
     return comparsion
 
 
-def load_board(circle_value, cross_value):
+def load_board(circle_value, cross_value, blank_value):
     for i in range(3):
         for j in range(3):
             x0_ = int(x0 + j * (size + space_between))
@@ -54,5 +54,7 @@ def load_board(circle_value, cross_value):
                 board[i, j] = circle
             elif compare_images(current, cross_value):
                 board[i, j] = cross
+            else:
+                board[i, j] = 0
 
     return board
