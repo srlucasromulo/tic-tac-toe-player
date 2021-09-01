@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import pyscreenshot
 
+
 size = 48
 delta = 188
 x0 = 412
@@ -10,12 +11,11 @@ x1 = x0 + delta
 y1 = y0 + delta
 space_between = (delta - 3 * size) / 2
 
-board = np.zeros((3, 3))
-circle = 1
-cross = 2
-
 
 def load_images_values():
+    global circle_value, cross_value, blank_value, \
+    circle_winner, cross_winner, draw
+
     circle_value = cv2.imread('./images/circle.jpg')
     circle_value = np.array(circle_value)
 
@@ -25,7 +25,14 @@ def load_images_values():
     blank_value = cv2.imread('./images/blank.jpg')
     blank_value = np.array(blank_value)
 
-    return circle_value, cross_value, blank_value
+    circle_winner = cv2.imread('./images/circle_winner.jpg')
+    circle_winner = np.array(circle_winner)
+
+    cross_winner = cv2.imread('./images/cross_winner.jpg')
+    cross_winner = np.array(cross_winner)
+
+    draw = cv2.imread('./images/draw.jpg')
+    draw = np.array(draw)
 
 
 def compare_images(image0, image1):
@@ -34,7 +41,8 @@ def compare_images(image0, image1):
     return comparsion
 
 
-def load_board(circle_value, cross_value, blank_value):
+def get_table_values(circle, cross):
+    table = np.zeros((3, 3))
     for i in range(3):
         for j in range(3):
             x0_ = int(x0 + j * (size + space_between))
@@ -51,10 +59,28 @@ def load_board(circle_value, cross_value, blank_value):
             current = np.array(current)
 
             if compare_images(current, circle_value):
-                board[i, j] = circle
+                table[i, j] = circle
             elif compare_images(current, cross_value):
-                board[i, j] = cross
+                table[i, j] = cross
             else:
-                board[i, j] = 0
+                table[i, j] = 0
 
-    return board
+    return table
+
+
+def check_winner():
+    area = (380, 450, 630, 630)
+    img = pyscreenshot.grab(bbox=area)
+    img_np = np.array(img)
+    cv2.imwrite('./images/winner.jpg', img_np)
+
+    winner = cv2.imread('./images/winner.jpg')
+    winner = np.array(winner)
+
+    if compare_images(winner, circle_winner):
+        return 1
+    if compare_images(winner, cross_winner):
+        return 2
+    if compare_images(winner, draw):
+        return 3
+    return 0

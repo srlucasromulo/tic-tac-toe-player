@@ -83,7 +83,6 @@ def random_position(board):
 
 def play(board):
     position = winning(board)
-    print(f'position to play: {position}')
     if position is not None:
         return position
     else:
